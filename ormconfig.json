@@ -4,7 +4,7 @@
   "port": 5432,
   "username": "",
   "password": "",
-  "database": "test",
+  "database": "nest",
   "entities": [
     "dist/**/*.entity{.ts,.js}"
   ],

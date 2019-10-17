@@ -8,7 +8,7 @@ export class UsersController {
 
   @UseGuards(AuthGuard())
   @Get()
-  getProfile(@Request() req) {
-    return req.user;
+  getProfile(@Request() { user }) {
+    return user;
   }
 }
