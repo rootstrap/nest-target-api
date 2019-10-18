@@ -1,33 +1,34 @@
 
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { hash } from 'bcrypt';
+
+import { ConfigService } from '../config/config.service';
+import { User } from './user.entity';
 
 export type User = any;
 
 @Injectable()
 export class UsersService {
-  private readonly users: User[];
+  private salts: number;
 
-  constructor() {
-    this.users = [
-      {
-        userId: 1,
-        username: 'john',
-        password: 'changeme',
-      },
-      {
-        userId: 2,
-        username: 'chris',
-        password: 'secret',
-      },
-      {
-        userId: 3,
-        username: 'maria',
-        password: 'guess',
-      },
-    ];
+  constructor(
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>,
+    config: ConfigService,
+  ) {
+    this.salts = parseInt(config.get('BCRYPT_SALTS_NUMBER'));
   }
 
-  async findOne(username: string): Promise<User | undefined> {
-    return this.users.find(user => user.username === username);
+  async findUserByEmail(email: string): Promise<User | undefined> {
+    return await this.usersRepository.findOne({ email });
+  }
+
+  async create(email: string, password: string): Promise<User> {
+    const hashedPassword = await hash(password, this.salts);
+    const user = new User(email, hashedPassword);
+    await this.usersRepository.save(user);
+    return user;
   }
 }
