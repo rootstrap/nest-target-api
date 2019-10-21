@@ -15,6 +15,9 @@ lerna-debug.log*
 
 # Dotenv environment variables file
 *.env
+!test.env
+
+ormconfig.yml
 
 # Tests
 /coverage

@@ -21,7 +21,7 @@ export class ErrorsInterceptor implements NestInterceptor {
           if (err instanceof QueryFailedError) {
             return throwError(new UnprocessableEntityException(err.message))
           }
-          return throwError(new BadGatewayException())
+          return throwError(err)
         }),
       );
   }

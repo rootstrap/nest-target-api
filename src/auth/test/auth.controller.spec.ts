@@ -13,7 +13,7 @@ describe('AuthController', () => {
   let authService: AuthService;
   let usersService: UsersService;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module = await Test.createTestingModule({
       controllers: [AuthController],
       providers: [
@@ -54,7 +54,7 @@ describe('AuthController', () => {
     let user;
     let usersServiceCreate;
 
-    beforeEach(async () => {
+    beforeAll(async () => {
       usersServiceCreate = jest.spyOn(usersService, 'create').mockImplementation(async () => mockUser);
       user = await authController.signup(mockUser);
     })
