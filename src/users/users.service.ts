@@ -18,7 +18,7 @@ export class UsersService {
     private readonly usersRepository: Repository<User>,
     config: ConfigService,
   ) {
-    this.salts = parseInt(config.get('BCRYPT_SALTS_NUMBER'));
+    this.salts = config.bcryptSaltsNumber;
   }
 
   async findUserByEmail(email: string): Promise<User | undefined> {
