@@ -1,0 +1,19 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/node:10.1
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restore npm cache
+          keys:
+            - dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: Install dependencies
+          command: npm install
+      - run:
+          name: "Run Jest and Collect Coverage Reports"
+          command: npm run test:cov
+      - store_artifacts:
+          path: src/coverage

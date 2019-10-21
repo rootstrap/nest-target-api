@@ -5,20 +5,13 @@ import { AuthService } from '../auth.service';
 import { UsersService } from '../../users/users.service';
 import UserDto from '../../users/dto/user.dto';
 import { User } from '../../users/user.entity'
+import { mockAuthService, mockUsersService } from './mocks';
 
 
 describe('AuthController', () => {
   let authController: AuthController;
   let authService: AuthService;
   let usersService: UsersService;
-
-  const mockAuthService = {
-    login: () => { },
-  };
-
-  const mockUsersService = {
-    create: () => { },
-  }
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -55,15 +48,23 @@ describe('AuthController', () => {
   });
 
   describe('signup', () => {
-    it('should call usersService.create and return a UserDto', async () => {
-      const mockUser = new User('user@example.com', 'password');
-      const userDto = new UserDto(mockUser);
+    const mockUser = new User('user@example.com', 'password');
+    mockUser.id = 1;
+    const userDto = new UserDto(mockUser);
+    let user;
+    let usersServiceCreate;
 
-      const usersServiceCreate = jest.spyOn(usersService, 'create').mockImplementation(async () => mockUser);
-      const user = await authController.signup(mockUser);
+    beforeEach(async () => {
+      usersServiceCreate = jest.spyOn(usersService, 'create').mockImplementation(async () => mockUser);
+      user = await authController.signup(mockUser);
+    })
 
+    it('should call usersService.create', async () => {
       expect(usersServiceCreate).toHaveBeenCalledWith(mockUser.email, mockUser.password);
-      expect(user).toEqual(userDto);
     });
+
+    it('should return a user DTO', async () => {
+      expect(user).toEqual(userDto);
+    })
   });
 });
