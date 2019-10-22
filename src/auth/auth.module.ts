@@ -16,7 +16,7 @@ const jwtModuleAsyncOptions = {
   useFactory: async (configService: ConfigService) => ({
     secret: configService.jwtSecret,
     signOptions: {
-      expiresIn: configService.jwtSecret,
+      expiresIn: configService.jwtExpiry,
     },
   }),
   inject: [ConfigService],
