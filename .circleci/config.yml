@@ -3,6 +3,10 @@ jobs:
   build:
     docker:
       - image: circleci/node:10.1
+      - image: circleci/postgres:9.4
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_DB: test
     steps:
       - checkout
       - restore_cache:
@@ -15,5 +19,8 @@ jobs:
       - run:
           name: "Run Jest and Collect Coverage Reports"
           command: npm run test:cov
+      - run:
+          name: "Run e2e test"
+          command: npm run test:e2e
       - store_artifacts:
           path: src/coverage
