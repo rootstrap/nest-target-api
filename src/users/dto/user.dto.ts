@@ -1,8 +1,8 @@
 export default class UserDto {
   constructor(user) {
-    this.id = user.id;
+    this.id = user.id
     this.email = user.email
   }
-  readonly id: number;
-  readonly email: string;
+  readonly id: number
+  readonly email: string
 }
