@@ -1,17 +1,17 @@
-import * as dotenv from 'dotenv';
-import * as Joi from '@hapi/joi';
-import * as fs from 'fs';
+import * as dotenv from 'dotenv'
+import * as Joi from '@hapi/joi'
+import * as fs from 'fs'
 
 export interface EnvConfig {
-  [key: string]: string;
+  [key: string]: string
 }
 
 export class ConfigService {
-  private readonly envConfig: EnvConfig;
+  private readonly envConfig: EnvConfig
 
   constructor(filePath: string) {
-    const config = dotenv.parse(fs.readFileSync(filePath));
-    this.envConfig = this.validateInput(config);
+    const config = dotenv.parse(fs.readFileSync(filePath))
+    this.envConfig = this.validateInput(config)
   }
 
   private validateInput(envConfig: EnvConfig): EnvConfig {
@@ -31,27 +31,27 @@ export class ConfigService {
       ORM_DATABASE: Joi.string().default('test'),
       ORM_SYNCRONIZE: Joi.boolean().default(true),
       ORM_ENTITIES: Joi.string().default('dist/**/*.entity{.ts,.js}'),
-    });
+    })
 
     const { error, value: validatedEnvConfig } = envVarsSchema.validate(
       envConfig,
-    );
+    )
     if (error) {
-      throw new Error(`Config validation error: ${error.message}`);
+      throw new Error(`Config validation error: ${error.message}`)
     }
-    return validatedEnvConfig;
+    return validatedEnvConfig
   }
 
   get jwtSecret(): string {
-    return this.envConfig.JWT_SECRET;
+    return this.envConfig.JWT_SECRET
   }
 
   get bcryptSaltsNumber(): number {
-    return parseInt(this.envConfig.BCRYPT_SALTS_NUMBER);
+    return parseInt(this.envConfig.BCRYPT_SALTS_NUMBER, 10)
   }
 
   get jwtExpiry(): string {
-    return this.envConfig.JWT_EXPIRES;
+    return this.envConfig.JWT_EXPIRES
   }
 
   get ormConfig(): object {
@@ -64,6 +64,6 @@ export class ConfigService {
       database: this.envConfig.ORM_DATABASE,
       entities:  [this.envConfig.ORM_ENTITIES],
       synchronize: this.envConfig.ORM_SYNCRONIZE,
-    };
+    }
   }
 }

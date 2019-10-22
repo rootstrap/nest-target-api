@@ -1,6 +1,6 @@
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { User } from '../src/users/user.entity';
+import { InjectRepository } from '@nestjs/typeorm'
+import { Repository } from 'typeorm'
+import { User } from '../src/users/user.entity'
 
 export class UsersRepoService {
   constructor(
@@ -9,10 +9,10 @@ export class UsersRepoService {
   ) { }
 
   async clear() {
-    await this.usersRepository.clear();
+    await this.usersRepository.clear()
   }
 
   async getLastUser() {
-    return this.usersRepository.findOne();
+    return this.usersRepository.findOne()
   }
 }

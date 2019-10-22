@@ -1,7 +1,7 @@
 export const mockAuthService = {
-  login: () => { },
-};
+  login: () => ({}),
+}
 
 export const mockUsersService = {
-  create: () => { },
+  create: () => ({}),
 }

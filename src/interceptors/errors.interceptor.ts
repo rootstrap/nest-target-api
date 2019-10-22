@@ -6,10 +6,10 @@ import {
   BadGatewayException,
   CallHandler,
   UnprocessableEntityException,
-} from '@nestjs/common';
-import { QueryFailedError } from 'typeorm';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+} from '@nestjs/common'
+import { QueryFailedError } from 'typeorm'
+import { Observable, throwError } from 'rxjs'
+import { catchError } from 'rxjs/operators'
 
 @Injectable()
 export class ErrorsInterceptor implements NestInterceptor {
@@ -23,6 +23,6 @@ export class ErrorsInterceptor implements NestInterceptor {
           }
           return throwError(err)
         }),
-      );
+      )
   }
 }

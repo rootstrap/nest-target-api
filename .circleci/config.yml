@@ -17,6 +17,9 @@ jobs:
           name: Install dependencies
           command: npm install
       - run:
+          name: Lint code
+          command: npm run lint
+      - run:
           name: "Run Jest and Collect Coverage Reports"
           command: npm run test:cov
       - run:
