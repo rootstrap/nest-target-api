@@ -17,13 +17,14 @@ const ormAsyncOptions = {
   inject: [ConfigService],
 }
 
-describe('POST /auth/signup', () => {
+describe('POST /auth/login', () => {
   let app: INestApplication
   let users
+  const mockUser = { email: 'user@example.com', password: 'password' }
 
-  const performSignup = (email, password?) =>
+  const performLogin = (email?, password?) =>
     request(app.getHttpServer())
-      .post('/auth/signup')
+      .post('/auth/login')
       .send({ email, password })
       .expect('Content-Type', /json/)
 
@@ -48,39 +49,29 @@ describe('POST /auth/signup', () => {
 
   describe('when sending correct data', () => {
     let response
+
     it(`should return 201`, async () => {
-      response = await performSignup('test@example.com', 'test')
+      await users.create(mockUser.email, mockUser.password)
+      response = await performLogin(mockUser.email, mockUser.password)
         .expect(201)
     })
 
-    it('should return the new user DTO', async () => {
-      const user = await users.getLastUser()
-      expect(response.body).toEqual(new UserDto(user))
+    it('should return a new JWT', async () => {
+      expect(response.body).toMatchObject({
+        access_token: expect.any(String),
+      })
     })
   })
 
-  describe('when sending a taken email', () => {
-    it(`should return 422`, () => {
-      return performSignup('test@example.com', 'test')
-       .expect(422)
-    })
-  })
-
-  describe('when sending an invalid email', () => {
-    it(`should return 400`, () => {
-      return performSignup('test@example', 'test')
-       .expect(400)
-    })
-  })
-
-  describe('when sending with missing parameters', () => {
-    it(`should return 400`, () => {
-      return performSignup('test@example')
-       .expect(400)
+  describe('when sending incorrect data', () => {
+    it(`should return 401`, async () => {
+      return await performLogin(mockUser.email)
+        .expect(401)
     })
   })
 
   afterAll(async () => {
+    await users.clear()
     await app.close()
   })
 })
