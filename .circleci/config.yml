@@ -30,13 +30,9 @@ jobs:
           name: "Run Jest and Collect Coverage Reports"
           command: npm run test:cov
       - run:
-          name: "Run e2e test"
-          command: npm run test:e2e
-      - run:
           name: Setup and run Code Climate test-reporter
           command: |
             curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
             chmod +x ./cc-test-reporter
-            cp -r src/coverage/ ./
             ./cc-test-reporter before-build
             ./cc-test-reporter after-build
