@@ -1,7 +1,7 @@
 import * as request from 'supertest'
 import { Test } from '@nestjs/testing'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { INestApplication, ValidationPipe } from '@nestjs/common'
+import { INestApplication } from '@nestjs/common'
 
 import { AuthModule } from '../src/auth/auth.module'
 import { ConfigService } from '../src/config/config.service'

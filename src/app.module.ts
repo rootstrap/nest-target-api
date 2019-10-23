@@ -5,6 +5,7 @@ import { AuthModule } from './auth/auth.module'
 import { UsersModule } from './users/users.module'
 import { ConfigModule } from './config/config.module'
 import { ConfigService } from './config/config.service'
+import { TopicsModule } from './topics/topics.module'
 
 const ormAsyncOptions = {
   imports: [ConfigModule],
@@ -18,6 +19,7 @@ const ormAsyncOptions = {
     TypeOrmModule.forRootAsync(ormAsyncOptions),
     AuthModule,
     UsersModule,
+    TopicsModule,
   ],
 })
 export class AppModule { }
