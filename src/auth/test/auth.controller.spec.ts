@@ -3,7 +3,7 @@ import { Test } from '@nestjs/testing'
 import { AuthController } from '../auth.controller'
 import { AuthService } from '../auth.service'
 import { UsersService } from '../../users/users.service'
-import UserDto from '../../users/dto/user.dto'
+import UserDto from '../../dto/user.dto'
 import { User } from '../../users/user.entity'
 import { mockAuthService, mockUsersService } from './mocks'
 

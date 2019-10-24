@@ -6,6 +6,7 @@ import { UsersModule } from './users/users.module'
 import { ConfigModule } from './config/config.module'
 import { ConfigService } from './config/config.service'
 import { TopicsModule } from './topics/topics.module'
+import { TargetsModule } from './targets/targets.module'
 
 const ormAsyncOptions = {
   imports: [ConfigModule],
@@ -20,6 +21,7 @@ const ormAsyncOptions = {
     AuthModule,
     UsersModule,
     TopicsModule,
+    TargetsModule,
   ],
 })
 export class AppModule { }
