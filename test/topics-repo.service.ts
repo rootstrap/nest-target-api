@@ -1,28 +1,29 @@
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
+import { lorem } from 'faker'
 
 import { Topic } from '../src/topics/topic.entity'
-import { ConfigService } from '../src/config/config.service'
+import TopicDto from '../src/dto/topic.dto'
 
 export class TopicsRepoService {
   constructor(
     @InjectRepository(Topic)
     private readonly topicsRepository: Repository<Topic>,
-    config: ConfigService,
   ) {
   }
 
-  async clear(): Promise<void> {
-    await this.topicsRepository.clear()
+  async mockOne(): Promise<Topic> {
+    let topic = new Topic(lorem.word())
+    topic = await this.topicsRepository.save(topic) 
+    return new TopicDto(topic)
   }
 
-  async create(name: string): Promise<Topic> {
-    const topic = new Topic(name)
-    await this.topicsRepository.save(topic)
-    return topic
-  }
-
-  async all(): Promise<Topic[]> {
-    return this.topicsRepository.find()
+  async mockMany(count: number): Promise<Topic[]> {
+    let topics = []
+    for (let i = 0; i < count; i++) {
+      topics.push(new Topic(lorem.word()))
+    }
+    topics = await this.topicsRepository.save(topics)
+    return topics.map(topic => new TopicDto(topic))
   }
 }

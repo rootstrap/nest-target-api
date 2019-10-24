@@ -15,5 +15,6 @@ import { AuthModule } from '../auth/auth.module'
   ],
   controllers: [TopicsController],
   providers: [TopicsService],
+  exports: [TopicsService],
 })
 export class TopicsModule {}

@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing'
+import { PassportModule } from '@nestjs/passport'
 
 import { TopicsController } from './topics.controller'
 import { TopicsService } from './topics.service'
@@ -12,6 +13,7 @@ describe('Config Controller', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [PassportModule.register({ defaultStrategy: 'jwt' })],
       controllers: [TopicsController],
       providers: [
         {
@@ -35,7 +37,6 @@ describe('Config Controller', () => {
 
   describe('getTopics', () => {
     it('should call topicsService.all', async () => {
-      const user = { user: 'user' }
       const authServiceAll = jest.spyOn(service, 'all')
       await controller.getTopics()
 
