@@ -1,4 +1,4 @@
-import * as request from 'supertest'
+import request from 'supertest'
 import { Test } from '@nestjs/testing'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { INestApplication } from '@nestjs/common'
