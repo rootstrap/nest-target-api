@@ -3,7 +3,6 @@ import {
   Injectable,
   NestInterceptor,
   ExecutionContext,
-  BadGatewayException,
   CallHandler,
   UnprocessableEntityException,
 } from '@nestjs/common'

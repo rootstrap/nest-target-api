@@ -5,29 +5,20 @@ import { INestApplication } from '@nestjs/common'
 
 import { AuthModule } from '../src/auth/auth.module'
 import { TopicsModule } from '../src/topics/topics.module'
-import { ConfigService } from '../src/config/config.service'
 import { ConfigModule } from '../src/config/config.module'
 import { TopicsRepoService } from './topics-repo.service'
 import { UsersRepoService } from './users-repo.service'
 import { Topic } from '../src/topics/topic.entity'
 import { User } from '../src/users/user.entity'
 import applyGlobalConfig from '../src/apply-global-conf'
+import ormAsyncOptions from './orm-config'
 
-const ormAsyncOptions = {
-  imports: [ConfigModule],
-  useFactory: async (configService: ConfigService) =>  configService.ormConfig,
-  inject: [ConfigService],
-}
-
-describe('POST /auth/signup', () => {
+describe('GET /topics', () => {
   let app: INestApplication
   let topics
   let users
-  let token
-  const email = 'user@example.com'
-  const password = 'password'
-  let mockTopics = ['Football', 'Sports', 'Outdoors']
-
+  let accessToken
+  let mockTopics
   beforeAll(async () => {
     const module = await Test.createTestingModule({
       imports: [
@@ -46,25 +37,16 @@ describe('POST /auth/signup', () => {
 
     topics = module.get<TopicsRepoService>(TopicsRepoService)
     users = module.get<UsersRepoService>(UsersRepoService)
-    await topics.clear()
-    await users.clear()
-    await users.create(email, password)
-    mockTopics.forEach(async topic => await topics.create(topic))
-    mockTopics = await topics.all()
 
-    const response = await request(app.getHttpServer())
-      .post('/auth/login')
-      .send({ email, password })
-      .expect('Content-Type', /json/)
-
-    token = response.body.access_token
+    mockTopics = await topics.mockMany(3)
+    ; ({ accessToken } = await users.mockWithToken(app))
   })
 
   describe('when sending correct token', () => {
     it('should return the list of topics', async () => {
       const { body } = await request(app.getHttpServer())
         .get('/topics')
-        .set('Authorization', `Bearer ${token}`)
+        .set('Authorization', `Bearer ${accessToken}`)
         .expect('Content-Type', /json/)
 
       expect(body).toEqual(expect.arrayContaining(mockTopics))
@@ -81,7 +63,6 @@ describe('POST /auth/signup', () => {
   })
 
   afterAll(async () => {
-    await users.clear()
     await app.close()
   })
 })
