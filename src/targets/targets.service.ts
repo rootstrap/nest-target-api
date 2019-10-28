@@ -38,4 +38,9 @@ export class TargetsService {
     const target = new Target(title, radius, latitude, longitude, user, topic)
     return new TargetDto(await this.targetsRepository.save(target))
   }
+
+  async findByUser(userInfo) {
+    const user = await this.usersRepository.findOne(userInfo, { relations: ['targets', 'targets.topic'] })
+    return user.targets
+  }
 }
