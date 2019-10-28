@@ -1,10 +1,9 @@
 import { InjectRepository } from '@nestjs/typeorm'
-import * as request from 'supertest'
+import request from 'supertest'
 import { Repository } from 'typeorm'
 import { internet } from 'faker'
 
 import { User } from '../src/users/user.entity'
-import UserDto from '../src/dto/user.dto'
 import { hash } from 'bcrypt'
 import { ConfigService } from '../src/config/config.service'
 
@@ -30,7 +29,7 @@ export class UsersRepoService {
     return user
   }
 
-  async mockWithToken(app): Promise<{ user: UserDto, accessToken: string }> {
+  async mockWithToken(app): Promise<{ user: User, accessToken: string }> {
     const email = internet.email()
     const password = internet.password()
 
@@ -41,7 +40,7 @@ export class UsersRepoService {
       .expect('Content-Type', /json/)
 
     return {
-      user: new UserDto(user),
+      user,
       accessToken,
     }
   }

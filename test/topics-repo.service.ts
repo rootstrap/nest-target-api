@@ -3,7 +3,6 @@ import { Repository } from 'typeorm'
 import { lorem } from 'faker'
 
 import { Topic } from '../src/topics/topic.entity'
-import TopicDto from '../src/dto/topic.dto'
 
 export class TopicsRepoService {
   constructor(
@@ -14,16 +13,15 @@ export class TopicsRepoService {
 
   async mockOne(): Promise<Topic> {
     let topic = new Topic(lorem.word())
-    topic = await this.topicsRepository.save(topic) 
-    return new TopicDto(topic)
+    return this.topicsRepository.save(topic) 
   }
 
   async mockMany(count: number): Promise<Topic[]> {
     let topics = []
     for (let i = 0; i < count; i++) {
-      topics.push(new Topic(lorem.word()))
+      topics.push(new Topic(`${lorem.word()}${i}`))
     }
     topics = await this.topicsRepository.save(topics)
-    return topics.map(topic => new TopicDto(topic))
+    return topics
   }
 }

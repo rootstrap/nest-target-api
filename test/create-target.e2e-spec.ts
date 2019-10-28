@@ -1,4 +1,4 @@
-import * as request from 'supertest'
+import request from 'supertest'
 import { Test } from '@nestjs/testing'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { INestApplication } from '@nestjs/common'
@@ -21,11 +21,19 @@ describe('POST /targets', () => {
   let app: INestApplication
   let topics
   let users
+  let user
   let accessToken
   let targets
   let mockTopic
   const mockTarget = {
     title: 'Title',
+    radius: 200,
+    latitude: 43.019293,
+    longitude: -23.981819,
+  }
+
+  const mockTarget2 = {
+    title: 'Title2',
     radius: 200,
     latitude: 43.019293,
     longitude: -23.981819,
@@ -53,7 +61,7 @@ describe('POST /targets', () => {
     targets = module.get<TargetsRepoService>(TargetsRepoService)
 
     mockTopic = await topics.mockOne()
-    ; ({ accessToken } = await users.mockWithToken(app))
+    ; ({ user, accessToken } = await users.mockWithToken(app))
   })
 
   describe('when sending correct token', () => {
@@ -85,6 +93,17 @@ describe('POST /targets', () => {
       })
     })
 
+    describe('when user has maxium targets', () => {
+      it('should return 403', async () => {
+        await targets.mockMany(10, user)
+        await request(app.getHttpServer())
+          .post('/targets')
+          .set('Authorization', `Bearer ${accessToken}`)
+          .send({ ...mockTarget2, topicId: mockTopic.id })
+          .expect('Content-Type', /json/)
+          .expect(403)
+      })
+    })
   })
 
   describe('when sending no token', () => {

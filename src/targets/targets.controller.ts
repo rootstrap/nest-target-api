@@ -2,6 +2,7 @@ import { Controller, Post, UseGuards, Request, Body } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 
 import { TargetsService } from './targets.service'
+import { MaxTargetsGuard } from './max-targets.guard'
 import CreateTargetDto from '../dto/create-target.dto'
 
 @Controller('targets')
@@ -10,7 +11,7 @@ export class TargetsController {
     private readonly targetservice: TargetsService,
   ) { }
 
-  @UseGuards(AuthGuard())
+  @UseGuards(AuthGuard(), MaxTargetsGuard)
   @Post()
   async create(
     @Request() { user },

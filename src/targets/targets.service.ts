@@ -5,7 +5,8 @@ import { Repository } from 'typeorm'
 import { Target } from './target.entity'
 import { Topic } from '../topics/topic.entity'
 import { User } from '../users/user.entity'
-import { TargetDto } from '../dto'
+import { TargetDto, UserDto } from '../dto'
+import { MAX_TARGETS } from '../constants'
 
 @Injectable()
 export class TargetsService {
@@ -17,6 +18,11 @@ export class TargetsService {
     @InjectRepository(Topic)
     private readonly topicsRepository: Repository<Topic>,
   ) {}
+
+  async canCreateTargets(userInfo: UserDto): Promise<boolean> {
+    const user = await this.usersRepository.findOne(userInfo, { relations: ['targets'] })
+    return !user.targets || user.targets.length < MAX_TARGETS
+  } 
 
   async create(
     title: string,

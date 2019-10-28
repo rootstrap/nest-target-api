@@ -10,8 +10,8 @@ export default class CreateTargetDto {
     this.radius = target.radius
     this.latitude = target.latitude
     this.longitude = target.longitude
-    this.topic = target.topic
-    this.user = target.user
+    this.topic = new TopicDto(target.topic)
+    this.user = new UserDto(target.user)
   }
   @IsNotEmpty()
   readonly title: string
