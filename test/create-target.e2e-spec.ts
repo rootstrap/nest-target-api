@@ -13,7 +13,7 @@ import { TargetsRepoService } from './targets-repo.service'
 import { Topic } from '../src/topics/topic.entity'
 import { User } from '../src/users/user.entity'
 import { Target } from '../src/targets/target.entity'
-import TargetDto from '../src/dto/target.dto'
+import { TargetDto } from '../src/dto'
 import applyGlobalConfig from '../src/apply-global-conf'
 import ormAsyncOptions from './orm-config'
 
@@ -77,8 +77,8 @@ describe('POST /targets', () => {
       })
 
       it('should return the newly created target', async () => {
-        const target = new TargetDto(await targets.last())
-        expect(response.body).toEqual(target)
+        const target = await targets.last()
+        expect(response.body).toEqual(TargetDto.from(target))
       })
     })
 

@@ -48,7 +48,7 @@ describe('POST /auth/signup', () => {
 
     it('should return the new user DTO', async () => {
       const user = await users.last()
-      expect(response.body).toEqual(new UserDto(user))
+      expect(response.body).toEqual(UserDto.from(user))
     })
   })
 

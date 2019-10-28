@@ -3,7 +3,7 @@ import { AuthGuard } from '@nestjs/passport'
 
 import { TargetsService } from './targets.service'
 import { MaxTargetsGuard } from './max-targets.guard'
-import { CreateTargetDto, TargetIndexDto } from '../dto'
+import { CreateTargetDto, TargetDto } from '../dto'
 
 @Controller('targets')
 export class TargetsController {
@@ -16,8 +16,8 @@ export class TargetsController {
   async create(
     @Request() { user },
     @Body() { title, radius, latitude, longitude, topicId }: CreateTargetDto,
-  ) {
-    return await this.targetservice.create(
+  ): Promise<TargetDto> {
+    const target = await this.targetservice.create(
       title,
       radius,
       latitude,
@@ -25,14 +25,13 @@ export class TargetsController {
       user,
       topicId,
     )
+    return TargetDto.from(target)
   }
 
   @UseGuards(AuthGuard())
   @Get()
-  async index(
-    @Request() { user },
-  ){
+  async index(@Request() { user }): Promise<TargetDto[]>{
     const targets = await this.targetservice.findByUser(user)
-    return targets.map(target => new TargetIndexDto(target))
+    return TargetDto.fromArray(targets)
   }
 }

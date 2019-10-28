@@ -1,5 +1,7 @@
 import { Controller, Get, UseGuards } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
+
+import { TopicDto } from '../dto'
 import { AuthService } from '../auth/auth.service'
 import { TopicsService } from './topics.service'
 
@@ -12,7 +14,8 @@ export class TopicsController {
 
   @UseGuards(AuthGuard())
   @Get()
-  getTopics() {
-    return this.topicsService.all()
+  async getTopics(): Promise<TopicDto[]> {
+    const topics = await this.topicsService.all()
+    return TopicDto.fromArray(topics)
   }
 }
