@@ -58,7 +58,7 @@ describe('POST /auth/login', () => {
 
   describe('when sending incorrect data', () => {
     it('should return 401', async () => {
-      return await performLogin(email)
+      return await performLogin('fake-email@example.com', 'fake-password')
         .expect(401)
     })
   })

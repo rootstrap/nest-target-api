@@ -3,7 +3,7 @@ import { compare } from 'bcrypt'
 import { JwtService } from '@nestjs/jwt'
 
 import { User } from '../users/user.entity'
-import UserDto from '../dto/user.dto'
+import { UserDto } from '../dto'
 import { UsersService } from '../users/users.service'
 
 @Injectable()
@@ -18,7 +18,7 @@ export class AuthService {
     if (user) {
       const passwordMatches = await compare(password, user.password)
       if (passwordMatches) {
-        return new UserDto(user)
+        return user
       }
     }
     return null

@@ -13,7 +13,7 @@ import { TargetsRepoService } from './targets-repo.service'
 import { Topic } from '../src/topics/topic.entity'
 import { User } from '../src/users/user.entity'
 import { Target } from '../src/targets/target.entity'
-import TargetIndexDto from '../src/dto/targets-index.dto'
+import { TargetDto } from '../src/dto'
 import applyGlobalConfig from '../src/apply-global-conf'
 import ormAsyncOptions from './orm-config'
 
@@ -73,7 +73,7 @@ describe('GET /targets', () => {
       })
       
       it('should return the user targets', () => {
-        expect(response.body).toEqual(mockTargets.map(target => new TargetIndexDto(target)))
+        expect(response.body).toEqual(TargetDto.fromArray(mockTargets))
       })
     })
   })
