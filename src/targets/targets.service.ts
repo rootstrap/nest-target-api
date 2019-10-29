@@ -5,7 +5,7 @@ import { Repository } from 'typeorm'
 import { Target } from './target.entity'
 import { Topic } from '../topics/topic.entity'
 import { User } from '../users/user.entity'
-import { TargetDto, UserDto } from '../dto'
+import { UserDto } from '../dto'
 import { MAX_TARGETS } from '../constants'
 
 @Injectable()
@@ -36,6 +36,11 @@ export class TargetsService {
     const user = await this.usersRepository.findOne(userInfo)
 
     const target = new Target(title, radius, latitude, longitude, user, topic)
-    return new TargetDto(await this.targetsRepository.save(target))
+    return this.targetsRepository.save(target)
+  }
+
+  async findByUser(userInfo) {
+    const user = await this.usersRepository.findOne(userInfo, { relations: ['targets', 'targets.topic'] })
+    return user.targets
   }
 }

@@ -17,27 +17,18 @@ import { TargetDto } from '../src/dto'
 import applyGlobalConfig from '../src/apply-global-conf'
 import ormAsyncOptions from './orm-config'
 
-describe('POST /targets', () => {
+describe('GET /targets', () => {
   let app: INestApplication
-  let topics
   let users
   let user
   let accessToken
   let targets
-  let mockTopic
-  const mockTarget = {
-    title: 'Title',
-    radius: 200,
-    latitude: 43.019293,
-    longitude: -23.981819,
-  }
+  let mockTargets
 
-  const mockTarget2 = {
-    title: 'Title2',
-    radius: 200,
-    latitude: 43.019293,
-    longitude: -23.981819,
-  }
+  const performRequest = () => request(app.getHttpServer())
+    .get('/targets')
+    .set('Authorization', `Bearer ${accessToken}`)
+    .expect('Content-Type', /json/)
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
@@ -56,62 +47,40 @@ describe('POST /targets', () => {
     applyGlobalConfig(app)
     await app.init()
 
-    topics = module.get<TopicsRepoService>(TopicsRepoService)
     users = module.get<UsersRepoService>(UsersRepoService)
     targets = module.get<TargetsRepoService>(TargetsRepoService)
 
-    mockTopic = await topics.mockOne()
     ; ({ user, accessToken } = await users.mockWithToken(app))
   })
 
   describe('when sending correct token', () => {
-    describe('when sending correct data', () => {
+    describe('when the user has no targets', () => {
       let response
-      it('should return 201', async () => {
-        response = await request(app.getHttpServer())
-          .post('/targets')
-          .set('Authorization', `Bearer ${accessToken}`)
-          .send({ ...mockTarget, topicId: mockTopic.id })
-          .expect('Content-Type', /json/)
-          .expect(201)
+      it('should return 200', async () => {
+        response = await performRequest().expect(200)
       })
 
-      it('should return the newly created target', async () => {
-        const target = await targets.last()
-        expect(response.body).toEqual(TargetDto.from(target))
+      it('should return the empty array', async () => {
+        expect(response.body).toEqual([])
       })
     })
 
-    describe('when sending incomplete data', () => {
-      it('should return 400', async () => {
-        await request(app.getHttpServer())
-          .post('/targets')
-          .set('Authorization', `Bearer ${accessToken}`)
-          .send(mockTarget) // missing topicId
-          .expect('Content-Type', /json/)
-          .expect(400)
+    describe('when the user has targets', () => {
+      let response
+      it('should return 200', async () => {
+        mockTargets = await targets.mockMany(3, user)
+        response = await performRequest().expect(200)
       })
-    })
-
-    describe('when user has maxium targets', () => {
-      it('should return 403', async () => {
-        await targets.mockMany(10, user)
-        await request(app.getHttpServer())
-          .post('/targets')
-          .set('Authorization', `Bearer ${accessToken}`)
-          .send({ ...mockTarget2, topicId: mockTopic.id })
-          .expect('Content-Type', /json/)
-          .expect(403)
+      
+      it('should return the user targets', () => {
+        expect(response.body).toEqual(TargetDto.fromArray(mockTargets))
       })
     })
   })
 
   describe('when sending no token', () => {
     it('should return 401', async () => {
-      request(app.getHttpServer())
-        .post('/topics')
-        .expect('Content-Type', /json/)
-        .expect(401)
+      performRequest().expect(401)
     })
   })
 

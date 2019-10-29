@@ -18,7 +18,7 @@ export class UsersRepoService {
     this.salts = config.bcryptSaltsNumber
   }
 
-  async last() {
+  async last(): Promise<User> {
     return this.usersRepository.findOne()
   }
 
