@@ -21,6 +21,23 @@ export class TargetsRepoService {
     return this.targetsRepository.findOne({ relations: ['user', 'topic'] })
   }
 
+  async mockOne(user: User): Promise<Target> {
+    const topic = await this.topicsService.mockOne()
+    const target = new Target(
+      lorem.word(),
+      random.number(),
+      parseFloat(address.latitude()),
+      parseFloat(address.longitude()),
+      user,
+      topic
+    )
+    return this.targetsRepository.save(target)
+  }
+
+  async findById(id: number): Promise<Target> {
+    return this.targetsRepository.findOne(id)
+  }
+
   async mockMany(count: number, user: User): Promise<Target[]> {
     const topic = await this.topicsService.mockOne()
     const targets = []
