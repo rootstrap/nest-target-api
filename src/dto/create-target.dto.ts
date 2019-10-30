@@ -12,10 +12,10 @@ export default class CreateTargetDto {
   readonly radius: number
 
   @IsNotEmpty()
-  readonly latitude: number
+  readonly latitude: string
 
   @IsNotEmpty()
-  readonly longitude: number
+  readonly longitude: string
 
   @IsNotEmpty()
   readonly topicId: number

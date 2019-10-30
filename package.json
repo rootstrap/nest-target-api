@@ -33,6 +33,7 @@
     "class-transformer": "^0.2.3",
     "class-validator": "^0.10.2",
     "dotenv": "^8.2.0",
+    "geolib": "^3.0.4",
     "nest-schedule": "^0.6.3",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",

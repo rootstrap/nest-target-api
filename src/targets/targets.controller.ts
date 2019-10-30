@@ -17,8 +17,8 @@ export class TargetsController {
   async create(
     @Request() { user },
     @Body() { title, radius, latitude, longitude, topicId }: CreateTargetDto,
-  ): Promise<TargetDto> {
-    const target = await this.targetservice.create(
+  ): Promise<{ target: TargetDto, matches: TargetDto[] }> {
+    const { target, matches } = await this.targetservice.create(
       title,
       radius,
       latitude,
@@ -26,7 +26,11 @@ export class TargetsController {
       user,
       topicId,
     )
-    return TargetDto.from(target)
+
+    return {
+      target: TargetDto.from(target),
+      matches: TargetDto.fromArray(matches),
+    }
   }
 
   @UseGuards(AuthGuard())

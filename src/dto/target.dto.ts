@@ -22,11 +22,11 @@ export default class TargetDto {
 
   @IsNotEmpty()
   @Expose()
-  readonly latitude: number
+  readonly latitude: string
 
   @IsNotEmpty()
   @Expose()
-  readonly longitude: number
+  readonly longitude: string
 
   @IsNotEmpty()
   @Expose()
