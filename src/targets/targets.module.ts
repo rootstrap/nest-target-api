@@ -21,5 +21,6 @@ import { User } from '../users/user.entity'
   ],
   controllers: [TargetsController],
   providers: [TargetsService],
+  exports: [TargetsService],
 })
 export class TargetsModule {}
