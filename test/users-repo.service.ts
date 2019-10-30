@@ -29,6 +29,14 @@ export class UsersRepoService {
     return user
   }
 
+  async mockOne(): Promise<User> {
+    const email = internet.email()
+    const password = internet.password()
+    const hashedPassword = await hash(password, this.salts)
+    const user = new User(email, hashedPassword)
+    return this.usersRepository.save(user)
+  }
+
   async mockWithToken(app): Promise<{ user: User, accessToken: string }> {
     const email = internet.email()
     const password = internet.password()

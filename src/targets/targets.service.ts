@@ -6,7 +6,7 @@ import { Target } from './target.entity'
 import { Topic } from '../topics/topic.entity'
 import { User } from '../users/user.entity'
 import { UserDto } from '../dto'
-import { MAX_TARGETS } from '../constants'
+import { MAX_TARGETS, WEEK } from './target.constants'
 
 @Injectable()
 export class TargetsService {
@@ -37,6 +37,19 @@ export class TargetsService {
 
     const target = new Target(title, radius, latitude, longitude, user, topic)
     return this.targetsRepository.save(target)
+  }
+
+  async cleanOldTargets() {
+    const oldTargets = await this.targetsRepository.find()
+    const now = Date.now()
+
+    oldTargets.filter((target) => {
+      const createdAt = new Date(target.createdAt).getTime()
+      const targetAge = now - createdAt
+      return targetAge > WEEK
+    })
+    
+    await this.targetsRepository.remove(oldTargets)
   }
 
   async findByUser(userInfo): Promise<Target[]> {

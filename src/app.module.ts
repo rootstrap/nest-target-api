@@ -7,6 +7,8 @@ import { ConfigModule } from './config/config.module'
 import { ConfigService } from './config/config.service'
 import { TopicsModule } from './topics/topics.module'
 import { TargetsModule } from './targets/targets.module'
+import { SchedulerModule } from './scheduler/scheduler.module'
+
 
 const ormAsyncOptions = {
   imports: [ConfigModule],
@@ -18,6 +20,7 @@ const ormAsyncOptions = {
   controllers: [AppController],
   imports: [
     TypeOrmModule.forRootAsync(ormAsyncOptions),
+    SchedulerModule,
     AuthModule,
     UsersModule,
     TopicsModule,

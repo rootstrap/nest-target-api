@@ -1,7 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm'
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn } from 'typeorm'
 import { IsInt, Min, Max } from 'class-validator'
 
-import { TARGET_MAX_RADIUS, TARGET_MIN_RADIUS } from '../constants'
+import { TARGET_MAX_RADIUS, TARGET_MIN_RADIUS } from './target.constants'
 import { User } from '../users/user.entity'
 import { Topic } from '../topics/topic.entity'
 
@@ -46,4 +46,7 @@ export class Target {
 
   @ManyToOne(() => Topic, { nullable: false })
   topic: Topic
+
+  @CreateDateColumn()
+  createdAt: Date
 }
