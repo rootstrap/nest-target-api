@@ -31,7 +31,7 @@ export class TargetsService {
     longitude: number,
     userInfo: User,
     topicID: number,
-  ) {
+  ): Promise<Target> {
     const topic = await this.topicsRepository.findOne(topicID)
     const user = await this.usersRepository.findOne(userInfo)
 
@@ -39,8 +39,16 @@ export class TargetsService {
     return this.targetsRepository.save(target)
   }
 
-  async findByUser(userInfo) {
+  async findByUser(userInfo): Promise<Target[]> {
     const user = await this.usersRepository.findOne(userInfo, { relations: ['targets', 'targets.topic'] })
     return user.targets
+  }
+
+  async deleteByUser(user, id): Promise<Target[]> {
+    const { targets } = await this.usersRepository.findOne(user, { relations: ['targets'] })
+    const target = targets && targets.filter(target => target.id === id)
+    if (target && target.length) {
+      return this.targetsRepository.remove(target)
+    }
   }
 }

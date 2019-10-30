@@ -3,19 +3,19 @@ import { Test } from '@nestjs/testing'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { INestApplication } from '@nestjs/common'
 
-import { AuthModule } from '../src/auth/auth.module'
-import { TopicsModule } from '../src/topics/topics.module'
-import { TargetsModule } from '../src/targets/targets.module'
-import { ConfigModule } from '../src/config/config.module'
-import { TopicsRepoService } from './topics-repo.service'
-import { UsersRepoService } from './users-repo.service'
-import { TargetsRepoService } from './targets-repo.service'
-import { Topic } from '../src/topics/topic.entity'
-import { User } from '../src/users/user.entity'
-import { Target } from '../src/targets/target.entity'
-import { TargetDto } from '../src/dto'
-import applyGlobalConfig from '../src/apply-global-conf'
-import ormAsyncOptions from './orm-config'
+import { AuthModule } from '../../src/auth/auth.module'
+import { TopicsModule } from '../../src/topics/topics.module'
+import { TargetsModule } from '../../src/targets/targets.module'
+import { ConfigModule } from '../../src/config/config.module'
+import { TopicsRepoService } from '../topics-repo.service'
+import { UsersRepoService } from '../users-repo.service'
+import { TargetsRepoService } from '../targets-repo.service'
+import { Topic } from '../../src/topics/topic.entity'
+import { User } from '../../src/users/user.entity'
+import { Target } from '../../src/targets/target.entity'
+import { TargetDto } from '../../src/dto'
+import applyGlobalConfig from '../../src/apply-global-conf'
+import ormAsyncOptions from '../orm-config'
 
 describe('POST /targets', () => {
   let app: INestApplication
@@ -109,7 +109,7 @@ describe('POST /targets', () => {
   describe('when sending no token', () => {
     it('should return 401', async () => {
       request(app.getHttpServer())
-        .post('/topics')
+        .post('/targets')
         .expect('Content-Type', /json/)
         .expect(401)
     })
