@@ -21,7 +21,7 @@ describe('POST /auth/signup', () => {
       .send({ email, password })
       .expect('Content-Type', /json/)
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     const module = await Test.createTestingModule({
       imports: [
         TypeOrmModule.forRootAsync(ormAsyncOptions),
@@ -39,41 +39,40 @@ describe('POST /auth/signup', () => {
     users = module.get<UsersRepoService>(UsersRepoService)
   })
 
+  afterEach(async () => app.close())
+
   describe('when sending correct data', () => {
-    let response
     it('should return 201', async () => {
-      response = await performSignup('test@example.com', 'test')
+      await performSignup('test@example.com', 'test')
         .expect(201)
     })
 
     it('should return the new user DTO', async () => {
+      const { body } = await performSignup('test@example.com', 'test')
       const user = await users.last()
-      expect(response.body).toEqual(UserDto.from(user))
+      expect(body).toEqual(UserDto.from(user))
     })
   })
 
-  describe('when sending a taken email', () => {
-    it('should return 422', () => {
-      return performSignup('test@example.com', 'test')
+  describe('when using a taken email', () => {
+    it('should return 422', async () => {
+      const { email } = await users.mockOne()
+      await performSignup(email, 'test')
         .expect(422)
     })
   })
 
-  describe('when sending an invalid email', () => {
-    it('should return 400', () => {
-      return performSignup('test@example', 'test')
+  describe('when using an invalid email', () => {
+    it('should return 400', async () => {
+      await performSignup('invalid@email', 'test')
         .expect(400)
     })
   })
 
-  describe('when sending with missing parameters', () => {
-    it('should return 400', () => {
-      return performSignup('test@example')
+  describe('when there are missing parameters', () => {
+    it('should return 400', async () => {
+      await performSignup('test@example')
         .expect(400)
     })
-  })
-
-  afterAll(async () => {
-    await app.close()
   })
 })

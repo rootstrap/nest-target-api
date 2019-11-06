@@ -27,7 +27,17 @@ describe('POST /targets', () => {
   let targets
   let mockTopic
   const mockTargets = generateCluttered(3)
-  let postTargets
+
+  const postTargets = (target, topicId, { authorized = true} = {}) => {
+    const postTargets = request(app.getHttpServer()).post('/targets')
+
+    authorized && postTargets.set('Authorization', `Bearer ${accessToken}`)
+    postTargets
+      .send({ ...target, topicId })
+      .expect('Content-Type', /json/)
+
+    return postTargets
+  }
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -52,65 +62,49 @@ describe('POST /targets', () => {
 
     mockTopic = await topics.mockOne()
     ; ({ user, accessToken } = await users.mockWithToken(app))
-
-    postTargets = (target, topicId, config = {}) => {
-      const postTargets = request(app.getHttpServer()).post('/targets')
-
-      const { authorized = true, expectStatus = 201 } = config
-
-      authorized && postTargets.set('Authorization', `Bearer ${accessToken}`)
-      postTargets
-        .send({ ...target, topicId })
-        .expect('Content-Type', /json/)
-
-      expectStatus && postTargets.expect(expectStatus)
-      return postTargets
-    }
   })
 
-  afterEach(async () => {
-    await app.close()
-  })
+  afterEach(async () => await app.close())
 
   describe('when sending correct token', () => {
     describe('when sending correct data', () => {
       it('should return 201', async () => {
-        await postTargets(mockTargets[0], mockTopic.id)
+        await postTargets(mockTargets[0], mockTopic.id).expect(201)
       })
 
       it('should return the newly created target', async () => {
-        const response = await postTargets(mockTargets[0], mockTopic.id)
+        const { body } = await postTargets(mockTargets[0], mockTopic.id)
         const target = await targets.last()
-        expect(response.body.target).toEqual(TargetDto.from(target))
+        expect(body.target).toEqual(TargetDto.from(target))
       })
       
       describe('when there is another target nearby with the same topic', () => {
         it('should create a new match', async () => {
           const target = await targets.mockOneFromInfo(mockTargets[0], user, mockTopic)
 
-          const response = await postTargets(mockTargets[1], mockTopic.id)
-          expect(response.body.matches[0].id).toEqual(target.id)
+          const { body } = await postTargets(mockTargets[1], mockTopic.id)
+          expect(body.matches[0].id).toEqual(target.id)
         })
       })
     })
 
     describe('when sending incomplete data', () => {
       it('should return 400', async () => {
-        await postTargets(mockTargets[1], undefined, { expectStatus: 400 })
+        await postTargets(mockTargets[1], undefined).expect(400)
       })
     })
 
     describe('when user has maxium targets', () => {
       it('should return 403', async () => {
         await targets.mockMany(10, user)
-        await postTargets(mockTargets[1], mockTopic.id, { expectStatus: 403 })
+        await postTargets(mockTargets[1], mockTopic.id).expect(403)
       })
     })
   })
 
   describe('when sending no token', () => {
     it('should return 401', async () => {
-      postTargets(mockTargets[1], mockTopic.id, { expectStatus: 401, authorized: false })
+      await postTargets(mockTargets[1], mockTopic.id, { authorized: false }).expect(401)
     })
   })
 })
