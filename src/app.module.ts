@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
-import { AppController } from 'app.controller'
 import entities from 'entities'
 import { AuthModule } from 'auth/auth.module'
+import { ConversationsModule } from 'conversations/conversations.module'
 import { UsersModule } from 'users/users.module'
 import { ConfigModule } from 'config/config.module'
 import { ConfigService } from 'config/config.service'
@@ -21,9 +21,9 @@ const ormAsyncOptions = {
 }
 
 @Module({
-  controllers: [AppController],
   imports: [
     TypeOrmModule.forRootAsync(ormAsyncOptions),
+    ConversationsModule,
     SchedulerModule,
     AuthModule,
     UsersModule,
