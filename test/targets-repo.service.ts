@@ -21,13 +21,25 @@ export class TargetsRepoService {
     return this.targetsRepository.findOne({ relations: ['user', 'topic'] })
   }
 
+  async mockOneFromInfo(target, user, topic): Promise<Target> {
+    const newTarget = new Target(
+      target.title,
+      target.radius,
+      target.latitude,
+      target.longitude,
+      user,
+      topic
+    )
+    return this.targetsRepository.save(newTarget)
+  }
+
   async mockOne(user: User): Promise<Target> {
     const topic = await this.topicsService.mockOne()
     const target = new Target(
       lorem.word(),
       random.number(),
-      parseFloat(address.latitude()),
-      parseFloat(address.longitude()),
+      address.latitude(),
+      address.longitude(),
       user,
       topic
     )
@@ -45,8 +57,8 @@ export class TargetsRepoService {
       targets.push(new Target(
         `${lorem.word()}${i}`,
         random.number(),
-        parseFloat(address.latitude()),
-        parseFloat(address.longitude()),
+        address.latitude(),
+        address.longitude(),
         user,
         topic
       ))

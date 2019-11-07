@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn } from 'typeorm'
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, ManyToMany, JoinTable } from 'typeorm'
 import { IsInt, Min, Max } from 'class-validator'
 
 import { TARGET_MAX_RADIUS, TARGET_MIN_RADIUS } from './target.constants'
@@ -10,10 +10,11 @@ export class Target {
   constructor(
     title: string,
     radius: number,
-    latitude: number,
-    longitude: number,
+    latitude: string,
+    longitude: string,
     user: User,
     topic: Topic,
+    matches?: Target[],
   ) {
     this.title = title
     this.radius = radius
@@ -21,6 +22,7 @@ export class Target {
     this.longitude = longitude
     this.user = user
     this.topic = topic
+    this.matches = matches
   }
 
   @PrimaryGeneratedColumn()
@@ -35,17 +37,21 @@ export class Target {
   @Column()
   radius: number
 
-  @Column('float')
-  latitude: number
+  @Column()
+  latitude: string
 
-  @Column('float')
-  longitude: number
+  @Column()
+  longitude: string
 
   @ManyToOne(() => User, user => user.targets, { nullable: false })
   user: User
 
   @ManyToOne(() => Topic, { nullable: false })
   topic: Topic
+
+  @ManyToMany(() => Target, target => target.matches, { cascade: ['update'] })
+  @JoinTable()
+  matches: Target[]
 
   @CreateDateColumn()
   createdAt: Date

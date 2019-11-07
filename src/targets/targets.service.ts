@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
+import { getDistance } from 'geolib'
 
 import { Target } from './target.entity'
 import { Topic } from '../topics/topic.entity'
@@ -27,16 +28,38 @@ export class TargetsService {
   async create(
     title: string,
     radius: number,
-    latitude: number,
-    longitude: number,
+    latitude: string,
+    longitude: string,
     userInfo: User,
     topicID: number,
-  ): Promise<Target> {
+  ): Promise<{ target: Target, matches: Target[] }> {
     const topic = await this.topicsRepository.findOne(topicID)
     const user = await this.usersRepository.findOne(userInfo)
 
-    const target = new Target(title, radius, latitude, longitude, user, topic)
-    return this.targetsRepository.save(target)
+    const sameTopicTargets = await this.targetsRepository.find({ topic })
+
+    const matches = sameTopicTargets.filter(target => {
+      const distance = getDistance(
+        { latitude: target.latitude, longitude: target.longitude },
+        { latitude, longitude }
+      )
+      return distance < target.radius + radius
+    })
+    
+    let target = new Target(title, radius, latitude, longitude, user, topic, matches)
+
+    matches.forEach(match => {
+      if (!match.matches) match.matches = []
+      match.matches.push(target)
+    })
+
+    // eslint-disable-next-line require-atomic-updates
+    target = await this.targetsRepository.save(target)
+
+    return {
+      target,
+      matches,
+    }
   }
 
   async cleanOldTargets() {
