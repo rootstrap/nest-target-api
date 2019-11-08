@@ -28,8 +28,7 @@ describe('GET /targets', () => {
     const getTargets = request(app.getHttpServer()).get('/targets')
 
     authorized && getTargets.set('Authorization', `Bearer ${accessToken}`)
-    return getTargets
-      .expect('Content-Type', /json/)
+    return getTargets.expect('Content-Type', /json/)
   }
 
   beforeEach(async () => {
@@ -51,8 +50,7 @@ describe('GET /targets', () => {
 
     users = module.get<UsersRepoService>(UsersRepoService)
     targets = module.get<TargetsRepoService>(TargetsRepoService)
-
-    ; ({ user, accessToken } = await users.mockWithToken(app))
+    ;({ user, accessToken } = await users.mockWithToken(app))
   })
 
   afterEach(async () => await app.close())
@@ -60,8 +58,7 @@ describe('GET /targets', () => {
   describe('when sending correct token', () => {
     describe('when the user has no targets', () => {
       it('should return 200', async () => {
-        await getTargets()
-          .expect(200)
+        await getTargets().expect(200)
       })
 
       it('should return the empty array', async () => {
@@ -73,10 +70,9 @@ describe('GET /targets', () => {
     describe('when the user has targets', () => {
       it('should return 200', async () => {
         await targets.mockMany(3, user)
-        await getTargets()
-          .expect(200)
+        await getTargets().expect(200)
       })
-      
+
       it('should return the user targets', async () => {
         const mockTargets = await targets.mockMany(3, user)
         const { body } = await getTargets()
@@ -87,8 +83,7 @@ describe('GET /targets', () => {
 
   describe('when sending no token', () => {
     it('should return 401', async () => {
-      await getTargets({ authorized: false })
-        .expect(401)
+      await getTargets({ authorized: false }).expect(401)
     })
   })
 })

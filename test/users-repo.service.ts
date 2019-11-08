@@ -37,12 +37,14 @@ export class UsersRepoService {
     return this.usersRepository.save(user)
   }
 
-  async mockWithToken(app): Promise<{ user: User, accessToken: string }> {
+  async mockWithToken(app): Promise<{ user: User; accessToken: string }> {
     const email = internet.email()
     const password = internet.password()
 
     const user = await this.create(email, password)
-    const { body: { accessToken } } = await request(app.getHttpServer())
+    const {
+      body: { accessToken },
+    } = await request(app.getHttpServer())
       .post('/auth/login')
       .send({ email, password })
       .expect('Content-Type', /json/)

@@ -10,7 +10,7 @@ export class TopicsController {
   constructor(
     private readonly authService: AuthService,
     private readonly topicsService: TopicsService,
-  ) { }
+  ) {}
 
   @UseGuards(AuthGuard())
   @Get()

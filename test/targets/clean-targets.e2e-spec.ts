@@ -48,7 +48,7 @@ describe('POST /targets', () => {
     user = await users.mockOne()
 
     await targetsHelper.mockMany(10, user)
-    
+
     const inOneMonth = new Date()
     inOneMonth.setMonth(inOneMonth.getMonth() + 1)
 

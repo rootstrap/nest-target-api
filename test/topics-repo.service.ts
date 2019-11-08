@@ -8,12 +8,11 @@ export class TopicsRepoService {
   constructor(
     @InjectRepository(Topic)
     private readonly topicsRepository: Repository<Topic>,
-  ) {
-  }
+  ) {}
 
   async mockOne(): Promise<Topic> {
-    let topic = new Topic(lorem.word())
-    return this.topicsRepository.save(topic) 
+    const topic = new Topic(lorem.word())
+    return this.topicsRepository.save(topic)
   }
 
   async mockMany(count: number): Promise<Topic[]> {

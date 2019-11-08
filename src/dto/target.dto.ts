@@ -3,7 +3,10 @@ import { Expose } from 'class-transformer'
 
 import { TopicDto } from './'
 import { Target } from '../targets/target.entity'
-import { TARGET_MAX_RADIUS, TARGET_MIN_RADIUS } from '../targets/target.constants'
+import {
+  TARGET_MAX_RADIUS,
+  TARGET_MIN_RADIUS,
+} from '../targets/target.constants'
 
 export default class TargetDto {
   @IsNotEmpty()

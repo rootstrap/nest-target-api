@@ -26,8 +26,12 @@ export class ConfigService {
       ORM_TYPE: Joi.string().default('postgres'),
       ORM_HOST: Joi.string().default('localhost'),
       ORM_PORT: Joi.number().default(5432),
-      ORM_USERNAME: Joi.string().allow('').default('postgres'),
-      ORM_PASSWORD: Joi.string().allow('').default(''),
+      ORM_USERNAME: Joi.string()
+        .allow('')
+        .default('postgres'),
+      ORM_PASSWORD: Joi.string()
+        .allow('')
+        .default(''),
       ORM_DATABASE: Joi.string().default('test'),
       ORM_SYNCRONIZE: Joi.boolean().default(true),
       ORM_ENTITIES: Joi.string().default('dist/**/*.entity{.ts,.js}'),

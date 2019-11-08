@@ -28,7 +28,7 @@ export class TargetsRepoService {
       target.latitude,
       target.longitude,
       user,
-      topic
+      topic,
     )
     return this.targetsRepository.save(newTarget)
   }
@@ -41,7 +41,7 @@ export class TargetsRepoService {
       address.latitude(),
       address.longitude(),
       user,
-      topic
+      topic,
     )
     return this.targetsRepository.save(target)
   }
@@ -54,14 +54,16 @@ export class TargetsRepoService {
     const topic = await this.topicsService.mockOne()
     const targets = []
     for (let i = 0; i < count; i++) {
-      targets.push(new Target(
-        `${lorem.word()}${i}`,
-        random.number(),
-        address.latitude(),
-        address.longitude(),
-        user,
-        topic
-      ))
+      targets.push(
+        new Target(
+          `${lorem.word()}${i}`,
+          random.number(),
+          address.latitude(),
+          address.longitude(),
+          user,
+          topic,
+        ),
+      )
     }
     return this.targetsRepository.save(targets)
   }

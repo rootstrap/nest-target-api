@@ -25,7 +25,9 @@ describe('DELETE /targets/:id', () => {
   let target
 
   const deleteTargets = (targetId, { authorized = true } = {}) => {
-    const deleteTargets = request(app.getHttpServer()).delete(`/targets/${targetId}`)
+    const deleteTargets = request(app.getHttpServer()).delete(
+      `/targets/${targetId}`,
+    )
     authorized && deleteTargets.set('Authorization', `Bearer ${accessToken}`)
     return deleteTargets
   }
@@ -49,20 +51,17 @@ describe('DELETE /targets/:id', () => {
 
     users = module.get<UsersRepoService>(UsersRepoService)
     targets = module.get<TargetsRepoService>(TargetsRepoService)
-
-    ; ({ user, accessToken } = await users.mockWithToken(app))
+    ;({ user, accessToken } = await users.mockWithToken(app))
 
     target = await targets.mockOne(user)
-  })    
+  })
 
   afterEach(async () => app.close())
 
   describe('when sending correct token', () => {
-
     describe('when the user has a target with correct id', () => {
       it('should return 204', async () => {
-        await deleteTargets(target.id)
-          .expect(204)
+        await deleteTargets(target.id).expect(204)
       })
 
       it('should delete the target', async () => {
@@ -76,16 +75,14 @@ describe('DELETE /targets/:id', () => {
       it('should return 404', async () => {
         const { user: otherUser } = await users.mockWithToken(app)
         const target = await targets.mockOne(otherUser)
-        await deleteTargets(target.id)
-          .expect(404)
+        await deleteTargets(target.id).expect(404)
       })
     })
   })
 
   describe('when sending no token', () => {
     it('should return 401', async () => {
-      await deleteTargets(target.id, { authorized: false })
-        .expect(401)
+      await deleteTargets(target.id, { authorized: false }).expect(401)
     })
   })
 })
