@@ -3,11 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { getDistance } from 'geolib'
 
-import { Target } from './target.entity'
-import { Topic } from '../topics/topic.entity'
-import { User } from '../users/user.entity'
-import { UserDto } from '../dto'
-import { MAX_TARGETS, WEEK } from './target.constants'
+import { UserDto } from 'dto'
+import { Target } from 'targets/target.entity'
+import { MAX_TARGETS, WEEK } from 'targets/target.constants'
+import { Topic } from 'topics/topic.entity'
+import { User } from 'users/user.entity'
 
 @Injectable()
 export class TargetsService {

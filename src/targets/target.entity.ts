@@ -9,9 +9,9 @@ import {
 } from 'typeorm'
 import { IsInt, Min, Max } from 'class-validator'
 
-import { TARGET_MAX_RADIUS, TARGET_MIN_RADIUS } from './target.constants'
-import { User } from '../users/user.entity'
-import { Topic } from '../topics/topic.entity'
+import { TARGET_MAX_RADIUS, TARGET_MIN_RADIUS } from 'targets/target.constants'
+import { User } from 'users/user.entity'
+import { Topic } from 'topics/topic.entity'
 
 @Entity()
 export class Target {

@@ -1,9 +1,9 @@
 import { Controller, Get, UseGuards } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 
-import { TopicDto } from '../dto'
-import { AuthService } from '../auth/auth.service'
-import { TopicsService } from './topics.service'
+import { AuthService } from 'auth/auth.service'
+import { TopicDto } from 'dto'
+import { TopicsService } from 'topics/topics.service'
 
 @Controller('topics')
 export class TopicsController {

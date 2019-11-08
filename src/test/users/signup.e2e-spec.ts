@@ -3,13 +3,13 @@ import { Test } from '@nestjs/testing'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { INestApplication } from '@nestjs/common'
 
-import { AuthModule } from '../../src/auth/auth.module'
-import { ConfigModule } from '../../src/config/config.module'
-import { UsersRepoService } from '../users-repo.service'
-import { UserDto } from '../../src/dto'
-import { User } from '../../src/users/user.entity'
-import applyGlobalConfig from '../../src/apply-global-conf'
-import ormAsyncOptions from '../orm-config'
+import { AuthModule } from 'auth/auth.module'
+import { ConfigModule } from 'config/config.module'
+import { UsersRepoService } from 'test/users-repo.service'
+import { UserDto } from 'dto'
+import { User } from 'users/user.entity'
+import applyGlobalConfig from 'apply-global-conf'
+import ormAsyncOptions from 'test/orm-config'
 
 describe('POST /auth/signup', () => {
   let app: INestApplication

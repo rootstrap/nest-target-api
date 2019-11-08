@@ -3,8 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { hash } from 'bcrypt'
 
-import { ConfigService } from '../config/config.service'
-import { User } from './user.entity'
+import { ConfigService } from 'config/config.service'
+import { User } from 'users/user.entity'
 
 export type User = any
 

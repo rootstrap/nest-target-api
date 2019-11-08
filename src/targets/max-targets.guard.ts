@@ -1,7 +1,7 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common'
 import { Observable } from 'rxjs'
 
-import { TargetsService } from './targets.service'
+import { TargetsService } from 'targets/targets.service'
 
 @Injectable()
 export class MaxTargetsGuard implements CanActivate {

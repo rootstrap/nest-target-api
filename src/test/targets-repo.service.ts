@@ -2,9 +2,9 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { lorem, random, address } from 'faker'
 
+import { Target } from 'targets/target.entity'
+import { User } from 'users/user.entity'
 import { TopicsRepoService } from './topics-repo.service'
-import { Target } from '../src/targets/target.entity'
-import { User } from '../src/users/user.entity'
 
 export class TargetsRepoService {
   private salts: number
