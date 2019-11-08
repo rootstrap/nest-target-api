@@ -1,6 +1,9 @@
 import { IsInt, IsNotEmpty, Min, Max } from 'class-validator'
 
-import { TARGET_MAX_RADIUS, TARGET_MIN_RADIUS } from '../targets/target.constants'
+import {
+  TARGET_MAX_RADIUS,
+  TARGET_MIN_RADIUS,
+} from '../targets/target.constants'
 
 export default class CreateTargetDto {
   @IsNotEmpty()

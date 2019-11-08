@@ -45,8 +45,7 @@ describe('POST /auth/login', () => {
 
   describe('when using correct data', () => {
     it('should return 201', async () => {
-      await performLogin(email, password)
-        .expect(201)
+      await performLogin(email, password).expect(201)
     })
 
     it('should return a new JWT', async () => {
@@ -59,8 +58,10 @@ describe('POST /auth/login', () => {
 
   describe('when using incorrect data', () => {
     it('should return 401', async () => {
-      return await performLogin('fake-email@example.com', 'fake-password')
-        .expect(401)
+      return await performLogin(
+        'fake-email@example.com',
+        'fake-password',
+      ).expect(401)
     })
   })
 })

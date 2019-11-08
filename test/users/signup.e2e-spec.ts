@@ -43,8 +43,7 @@ describe('POST /auth/signup', () => {
 
   describe('when sending correct data', () => {
     it('should return 201', async () => {
-      await performSignup('test@example.com', 'test')
-        .expect(201)
+      await performSignup('test@example.com', 'test').expect(201)
     })
 
     it('should return the new user DTO', async () => {
@@ -57,22 +56,19 @@ describe('POST /auth/signup', () => {
   describe('when using a taken email', () => {
     it('should return 422', async () => {
       const { email } = await users.mockOne()
-      await performSignup(email, 'test')
-        .expect(422)
+      await performSignup(email, 'test').expect(422)
     })
   })
 
   describe('when using an invalid email', () => {
     it('should return 400', async () => {
-      await performSignup('invalid@email', 'test')
-        .expect(400)
+      await performSignup('invalid@email', 'test').expect(400)
     })
   })
 
   describe('when there are missing parameters', () => {
     it('should return 400', async () => {
-      await performSignup('test@example')
-        .expect(400)
+      await performSignup('test@example').expect(400)
     })
   })
 })

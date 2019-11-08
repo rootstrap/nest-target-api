@@ -25,7 +25,7 @@ describe('GET /topics', () => {
     authorized && getTopics.set('Authorization', `Bearer ${accessToken}`)
     return getTopics.expect('Content-Type', /json/)
   }
-  
+
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       imports: [
@@ -46,15 +46,14 @@ describe('GET /topics', () => {
     users = module.get<UsersRepoService>(UsersRepoService)
 
     mockTopics = await topics.mockMany(3)
-    ; ({ accessToken } = await users.mockWithToken(app))
+    ;({ accessToken } = await users.mockWithToken(app))
   })
 
   afterEach(async () => app.close())
 
   describe('when sending correct token', () => {
     it('should return the 200', async () => {
-      await getTopics()
-        .expect(200)
+      await getTopics().expect(200)
     })
 
     it('should return the list of topics', async () => {
@@ -65,8 +64,7 @@ describe('GET /topics', () => {
 
   describe('when sending no token', () => {
     it('should return 401', async () => {
-      await getTopics({ authorized: false })
-        .expect(401)
+      await getTopics({ authorized: false }).expect(401)
     })
   })
 })

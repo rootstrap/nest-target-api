@@ -21,9 +21,11 @@ export class TargetsService {
   ) {}
 
   async canCreateTargets(userInfo: UserDto): Promise<boolean> {
-    const user = await this.usersRepository.findOne(userInfo, { relations: ['targets'] })
+    const user = await this.usersRepository.findOne(userInfo, {
+      relations: ['targets'],
+    })
     return !user.targets || user.targets.length < MAX_TARGETS
-  } 
+  }
 
   async create(
     title: string,
@@ -32,7 +34,7 @@ export class TargetsService {
     longitude: string,
     userInfo: User,
     topicID: number,
-  ): Promise<{ target: Target, matches: Target[] }> {
+  ): Promise<{ target: Target; matches: Target[] }> {
     const topic = await this.topicsRepository.findOne(topicID)
     const user = await this.usersRepository.findOne(userInfo)
 
@@ -41,12 +43,20 @@ export class TargetsService {
     const matches = sameTopicTargets.filter(target => {
       const distance = getDistance(
         { latitude: target.latitude, longitude: target.longitude },
-        { latitude, longitude }
+        { latitude, longitude },
       )
       return distance < target.radius + radius
     })
-    
-    let target = new Target(title, radius, latitude, longitude, user, topic, matches)
+
+    let target = new Target(
+      title,
+      radius,
+      latitude,
+      longitude,
+      user,
+      topic,
+      matches,
+    )
 
     matches.forEach(match => {
       if (!match.matches) match.matches = []
@@ -66,22 +76,26 @@ export class TargetsService {
     const oldTargets = await this.targetsRepository.find()
     const now = Date.now()
 
-    oldTargets.filter((target) => {
+    oldTargets.filter(target => {
       const createdAt = new Date(target.createdAt).getTime()
       const targetAge = now - createdAt
       return targetAge > WEEK
     })
-    
+
     await this.targetsRepository.remove(oldTargets)
   }
 
   async findByUser(userInfo): Promise<Target[]> {
-    const user = await this.usersRepository.findOne(userInfo, { relations: ['targets', 'targets.topic'] })
+    const user = await this.usersRepository.findOne(userInfo, {
+      relations: ['targets', 'targets.topic'],
+    })
     return user.targets
   }
 
   async deleteByUser(user, id): Promise<Target[]> {
-    const { targets } = await this.usersRepository.findOne(user, { relations: ['targets'] })
+    const { targets } = await this.usersRepository.findOne(user, {
+      relations: ['targets'],
+    })
     const target = targets && targets.filter(target => target.id === id)
     if (target && target.length) {
       return this.targetsRepository.remove(target)

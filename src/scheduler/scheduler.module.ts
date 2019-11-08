@@ -6,9 +6,6 @@ import { TargetsModule } from '../targets/targets.module'
 
 @Module({
   providers: [SchedulerService],
-  imports: [
-    TargetsModule,
-    Scheduler.register(),
-  ]
+  imports: [TargetsModule, Scheduler.register()],
 })
 export class SchedulerModule {}

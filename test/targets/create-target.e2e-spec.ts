@@ -28,13 +28,11 @@ describe('POST /targets', () => {
   let mockTopic
   const mockTargets = generateCluttered(3)
 
-  const postTargets = (target, topicId, { authorized = true} = {}) => {
+  const postTargets = (target, topicId, { authorized = true } = {}) => {
     const postTargets = request(app.getHttpServer()).post('/targets')
 
     authorized && postTargets.set('Authorization', `Bearer ${accessToken}`)
-    postTargets
-      .send({ ...target, topicId })
-      .expect('Content-Type', /json/)
+    postTargets.send({ ...target, topicId }).expect('Content-Type', /json/)
 
     return postTargets
   }
@@ -61,7 +59,7 @@ describe('POST /targets', () => {
     targets = module.get<TargetsRepoService>(TargetsRepoService)
 
     mockTopic = await topics.mockOne()
-    ; ({ user, accessToken } = await users.mockWithToken(app))
+    ;({ user, accessToken } = await users.mockWithToken(app))
   })
 
   afterEach(async () => await app.close())
@@ -77,10 +75,14 @@ describe('POST /targets', () => {
         const target = await targets.last()
         expect(body.target).toEqual(TargetDto.from(target))
       })
-      
+
       describe('when there is another target nearby with the same topic', () => {
         it('should create a new match', async () => {
-          const target = await targets.mockOneFromInfo(mockTargets[0], user, mockTopic)
+          const target = await targets.mockOneFromInfo(
+            mockTargets[0],
+            user,
+            mockTopic,
+          )
 
           const { body } = await postTargets(mockTargets[1], mockTopic.id)
           expect(body.matches[0].id).toEqual(target.id)
@@ -104,7 +106,9 @@ describe('POST /targets', () => {
 
   describe('when sending no token', () => {
     it('should return 401', async () => {
-      await postTargets(mockTargets[1], mockTopic.id, { authorized: false }).expect(401)
+      await postTargets(mockTargets[1], mockTopic.id, {
+        authorized: false,
+      }).expect(401)
     })
   })
 })

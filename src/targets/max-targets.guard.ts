@@ -1,4 +1,3 @@
-
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common'
 import { Observable } from 'rxjs'
 
@@ -6,9 +5,7 @@ import { TargetsService } from './targets.service'
 
 @Injectable()
 export class MaxTargetsGuard implements CanActivate {
-  constructor(
-    readonly targetsService: TargetsService,
-  ) {}
+  constructor(readonly targetsService: TargetsService) {}
 
   canActivate(
     context: ExecutionContext,

@@ -1,4 +1,3 @@
-
 import { Module, forwardRef } from '@nestjs/common'
 import { PassportModule } from '@nestjs/passport'
 import { JwtModule } from '@nestjs/jwt'
@@ -33,4 +32,4 @@ const jwtModuleAsyncOptions = {
   exports: [AuthService],
   controllers: [AuthController],
 })
-export class AuthModule { }
+export class AuthModule {}

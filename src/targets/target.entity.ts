@@ -1,4 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, ManyToMany, JoinTable } from 'typeorm'
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  CreateDateColumn,
+  ManyToMany,
+  JoinTable,
+} from 'typeorm'
 import { IsInt, Min, Max } from 'class-validator'
 
 import { TARGET_MAX_RADIUS, TARGET_MIN_RADIUS } from './target.constants'

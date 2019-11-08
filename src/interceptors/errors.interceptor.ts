@@ -1,4 +1,3 @@
-
 import {
   Injectable,
   NestInterceptor,
@@ -13,15 +12,13 @@ import { catchError } from 'rxjs/operators'
 @Injectable()
 export class ErrorsInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    return next
-      .handle()
-      .pipe(
-        catchError(err => {
-          if (err instanceof QueryFailedError) {
-            return throwError(new UnprocessableEntityException(err.message))
-          }
-          return throwError(err)
-        }),
-      )
+    return next.handle().pipe(
+      catchError(err => {
+        if (err instanceof QueryFailedError) {
+          return throwError(new UnprocessableEntityException(err.message))
+        }
+        return throwError(err)
+      }),
+    )
   }
 }

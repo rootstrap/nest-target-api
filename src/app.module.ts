@@ -9,10 +9,9 @@ import { TopicsModule } from './topics/topics.module'
 import { TargetsModule } from './targets/targets.module'
 import { SchedulerModule } from './scheduler/scheduler.module'
 
-
 const ormAsyncOptions = {
   imports: [ConfigModule],
-  useFactory: async (configService: ConfigService) =>  configService.ormConfig,
+  useFactory: async (configService: ConfigService) => configService.ormConfig,
   inject: [ConfigService],
 }
 
@@ -27,4 +26,4 @@ const ormAsyncOptions = {
     TargetsModule,
   ],
 })
-export class AppModule { }
+export class AppModule {}
