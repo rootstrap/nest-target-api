@@ -22,7 +22,7 @@ describe('POST /auth/login', () => {
       .send({ email, password })
       .expect('Content-Type', /json/)
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     const module = await Test.createTestingModule({
       imports: [
         TypeOrmModule.forRootAsync(ormAsyncOptions),
@@ -38,32 +38,29 @@ describe('POST /auth/login', () => {
     await app.init()
 
     users = module.get<UsersRepoService>(UsersRepoService)
+    await users.create(email, password)
   })
 
-  describe('when sending correct data', () => {
-    let response
+  afterEach(async () => app.close())
 
+  describe('when using correct data', () => {
     it('should return 201', async () => {
-      await users.create(email, password)
-      response = await performLogin(email, password)
+      await performLogin(email, password)
         .expect(201)
     })
 
     it('should return a new JWT', async () => {
-      expect(response.body).toMatchObject({
+      const { body } = await performLogin(email, password)
+      expect(body).toMatchObject({
         accessToken: expect.any(String),
       })
     })
   })
 
-  describe('when sending incorrect data', () => {
+  describe('when using incorrect data', () => {
     it('should return 401', async () => {
       return await performLogin('fake-email@example.com', 'fake-password')
         .expect(401)
     })
-  })
-
-  afterAll(async () => {
-    await app.close()
   })
 })

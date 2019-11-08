@@ -23,14 +23,16 @@ describe('GET /targets', () => {
   let user
   let accessToken
   let targets
-  let mockTargets
 
-  const performRequest = () => request(app.getHttpServer())
-    .get('/targets')
-    .set('Authorization', `Bearer ${accessToken}`)
-    .expect('Content-Type', /json/)
+  const getTargets = ({ authorized = true } = {}) => {
+    const getTargets = request(app.getHttpServer()).get('/targets')
 
-  beforeAll(async () => {
+    authorized && getTargets.set('Authorization', `Bearer ${accessToken}`)
+    return getTargets
+      .expect('Content-Type', /json/)
+  }
+
+  beforeEach(async () => {
     const module = await Test.createTestingModule({
       imports: [
         TypeOrmModule.forRootAsync(ormAsyncOptions),
@@ -53,38 +55,40 @@ describe('GET /targets', () => {
     ; ({ user, accessToken } = await users.mockWithToken(app))
   })
 
+  afterEach(async () => await app.close())
+
   describe('when sending correct token', () => {
     describe('when the user has no targets', () => {
-      let response
       it('should return 200', async () => {
-        response = await performRequest().expect(200)
+        await getTargets()
+          .expect(200)
       })
 
       it('should return the empty array', async () => {
-        expect(response.body).toEqual([])
+        const { body } = await getTargets()
+        expect(body).toEqual([])
       })
     })
 
     describe('when the user has targets', () => {
-      let response
       it('should return 200', async () => {
-        mockTargets = await targets.mockMany(3, user)
-        response = await performRequest().expect(200)
+        await targets.mockMany(3, user)
+        await getTargets()
+          .expect(200)
       })
       
-      it('should return the user targets', () => {
-        expect(response.body).toEqual(TargetDto.fromArray(mockTargets))
+      it('should return the user targets', async () => {
+        const mockTargets = await targets.mockMany(3, user)
+        const { body } = await getTargets()
+        expect(body).toEqual(TargetDto.fromArray(mockTargets))
       })
     })
   })
 
   describe('when sending no token', () => {
     it('should return 401', async () => {
-      performRequest().expect(401)
+      await getTargets({ authorized: false })
+        .expect(401)
     })
-  })
-
-  afterAll(async () => {
-    await app.close()
   })
 })

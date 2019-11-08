@@ -19,7 +19,14 @@ describe('GET /topics', () => {
   let users
   let accessToken
   let mockTopics
-  beforeAll(async () => {
+
+  const getTopics = ({ authorized = true } = {}) => {
+    const getTopics = request(app.getHttpServer()).get('/topics')
+    authorized && getTopics.set('Authorization', `Bearer ${accessToken}`)
+    return getTopics.expect('Content-Type', /json/)
+  }
+  
+  beforeEach(async () => {
     const module = await Test.createTestingModule({
       imports: [
         TypeOrmModule.forRootAsync(ormAsyncOptions),
@@ -42,27 +49,24 @@ describe('GET /topics', () => {
     ; ({ accessToken } = await users.mockWithToken(app))
   })
 
-  describe('when sending correct token', () => {
-    it('should return the list of topics', async () => {
-      const { body } = await request(app.getHttpServer())
-        .get('/topics')
-        .set('Authorization', `Bearer ${accessToken}`)
-        .expect('Content-Type', /json/)
+  afterEach(async () => app.close())
 
+  describe('when sending correct token', () => {
+    it('should return the 200', async () => {
+      await getTopics()
+        .expect(200)
+    })
+
+    it('should return the list of topics', async () => {
+      const { body } = await getTopics()
       expect(body).toEqual(expect.arrayContaining(mockTopics))
     })
   })
 
   describe('when sending no token', () => {
     it('should return 401', async () => {
-      request(app.getHttpServer())
-        .get('/topics')
-        .expect('Content-Type', /json/)
+      await getTopics({ authorized: false })
         .expect(401)
     })
-  })
-
-  afterAll(async () => {
-    await app.close()
   })
 })

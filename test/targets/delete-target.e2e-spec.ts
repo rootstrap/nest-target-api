@@ -23,9 +23,14 @@ describe('DELETE /targets/:id', () => {
   let accessToken
   let targets
   let target
-  let otherTarget
 
-  beforeAll(async () => {
+  const deleteTargets = (targetId, { authorized = true } = {}) => {
+    const deleteTargets = request(app.getHttpServer()).delete(`/targets/${targetId}`)
+    authorized && deleteTargets.set('Authorization', `Bearer ${accessToken}`)
+    return deleteTargets
+  }
+
+  beforeEach(async () => {
     const module = await Test.createTestingModule({
       imports: [
         TypeOrmModule.forRootAsync(ormAsyncOptions),
@@ -46,23 +51,22 @@ describe('DELETE /targets/:id', () => {
     targets = module.get<TargetsRepoService>(TargetsRepoService)
 
     ; ({ user, accessToken } = await users.mockWithToken(app))
-    const { user: otherUser } = await users.mockWithToken(app)
 
     target = await targets.mockOne(user)
-    otherTarget = await targets.mockOne(otherUser)
   })    
+
+  afterEach(async () => app.close())
 
   describe('when sending correct token', () => {
 
     describe('when the user has a target with correct id', () => {
       it('should return 204', async () => {
-        await request(app.getHttpServer())
-          .delete(`/targets/${target.id}`)
-          .set('Authorization', `Bearer ${accessToken}`)
+        await deleteTargets(target.id)
           .expect(204)
       })
 
       it('should delete the target', async () => {
+        await deleteTargets(target.id)
         const after = await targets.findById(target.id)
         expect(after).toBeUndefined()
       })
@@ -70,9 +74,9 @@ describe('DELETE /targets/:id', () => {
 
     describe('when the target does not belong to user', () => {
       it('should return 404', async () => {
-        await request(app.getHttpServer())
-          .delete(`/targets/${otherTarget.id}`)
-          .set('Authorization', `Bearer ${accessToken}`)
+        const { user: otherUser } = await users.mockWithToken(app)
+        const target = await targets.mockOne(otherUser)
+        await deleteTargets(target.id)
           .expect(404)
       })
     })
@@ -80,13 +84,8 @@ describe('DELETE /targets/:id', () => {
 
   describe('when sending no token', () => {
     it('should return 401', async () => {
-      request(app.getHttpServer())
-        .delete(`/targets/${target.id}`)
+      await deleteTargets(target.id, { authorized: false })
         .expect(401)
     })
-  })
-
-  afterAll(async () => {
-    await app.close()
   })
 })
