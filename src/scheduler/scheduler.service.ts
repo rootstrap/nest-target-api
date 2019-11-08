@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { Cron, NestSchedule } from 'nest-schedule'
 
-import { TargetsService } from '../targets/targets.service'
+import { TargetsService } from 'targets/targets.service'
 
 @Injectable()
 export class SchedulerService extends NestSchedule {

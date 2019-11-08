@@ -1,5 +1,5 @@
-import { ConfigModule } from '../src/config/config.module'
-import { ConfigService } from '../src/config/config.service'
+import { ConfigModule } from 'config/config.module'
+import { ConfigService } from 'config/config.service'
 
 export default {
   imports: [ConfigModule],

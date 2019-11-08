@@ -2,7 +2,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { lorem } from 'faker'
 
-import { Topic } from '../src/topics/topic.entity'
+import { Topic } from 'topics/topic.entity'
 
 export class TopicsRepoService {
   constructor(

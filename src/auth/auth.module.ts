@@ -2,13 +2,13 @@ import { Module, forwardRef } from '@nestjs/common'
 import { PassportModule } from '@nestjs/passport'
 import { JwtModule } from '@nestjs/jwt'
 
-import { UsersModule } from '../users/users.module'
-import { ConfigModule } from '../config/config.module'
-import { AuthService } from './auth.service'
-import { LocalStrategy } from './local.strategy'
-import { JwtStrategy } from './jwt.strategy'
-import { ConfigService } from '../config/config.service'
-import { AuthController } from './auth.controller'
+import { AuthService } from 'auth/auth.service'
+import { JwtStrategy } from 'auth/jwt.strategy'
+import { LocalStrategy } from 'auth/local.strategy'
+import { AuthController } from 'auth/auth.controller'
+import { ConfigModule } from 'config/config.module'
+import { ConfigService } from 'config/config.service'
+import { UsersModule } from 'users/users.module'
 
 const jwtModuleAsyncOptions = {
   imports: [ConfigModule],

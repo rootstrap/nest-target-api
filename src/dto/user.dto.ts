@@ -1,7 +1,7 @@
 import { IsEmail, IsNumber } from 'class-validator'
 import { Expose } from 'class-transformer'
 
-import { User } from '../users/user.entity'
+import { User } from 'users/user.entity'
 
 export default class UserDto {
   @IsNumber()

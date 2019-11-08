@@ -2,10 +2,10 @@ import { InjectRepository } from '@nestjs/typeorm'
 import request from 'supertest'
 import { Repository } from 'typeorm'
 import { internet } from 'faker'
-
-import { User } from '../src/users/user.entity'
 import { hash } from 'bcrypt'
-import { ConfigService } from '../src/config/config.service'
+
+import { ConfigService } from 'config/config.service'
+import { User } from 'users/user.entity'
 
 export class UsersRepoService {
   private salts: number

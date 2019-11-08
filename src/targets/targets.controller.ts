@@ -11,10 +11,10 @@ import {
 } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 
-import { RecordNotFoundException } from '../exceptions/record-not-found.exception'
-import { TargetsService } from './targets.service'
-import { MaxTargetsGuard } from './max-targets.guard'
-import { CreateTargetDto, TargetDto } from '../dto'
+import { RecordNotFoundException } from 'exceptions/record-not-found.exception'
+import { TargetsService } from 'targets/targets.service'
+import { MaxTargetsGuard } from 'targets/max-targets.guard'
+import { CreateTargetDto, TargetDto } from 'dto'
 
 @Controller('targets')
 export class TargetsController {

@@ -1,7 +1,7 @@
 import { IsInt, IsNotEmpty } from 'class-validator'
 import { Expose } from 'class-transformer'
 
-import { Topic } from '../topics/topic.entity'
+import { Topic } from 'topics/topic.entity'
 
 export default class TopicDto {
   @IsInt()
