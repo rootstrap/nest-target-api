@@ -31,7 +31,7 @@
     "@types/faker": "^4.1.6",
     "bcrypt": "^3.0.6",
     "class-transformer": "^0.2.3",
-    "class-validator": "^0.10.2",
+    "class-validator": "^0.14.0",
     "dotenv": "^8.2.0",
     "geolib": "^3.0.4",
     "nest-schedule": "^0.6.3",
